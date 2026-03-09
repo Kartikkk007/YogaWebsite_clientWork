@@ -2,19 +2,32 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import AdminScheduleManager from '../components/admin/AdminScheduleManager'
 
-const ADMIN_PASSWORD = import.meta.env.VITE.ADMIN_PASSWORD
-
 export default function AdminPage() {
   const [entered, setEntered] = useState(false)
   const [input, setInput] = useState('')
   const [error, setError] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const handleLogin = () => {
-    if (input === ADMIN_PASSWORD) {
-      setEntered(true)
-    } else {
+  const handleLogin = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/schedules/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: input }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setEntered(true)
+      } else {
+        setError(true)
+        setInput('')
+      }
+    } catch {
       setError(true)
       setInput('')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -45,8 +58,12 @@ export default function AdminPage() {
             <p className="font-body text-xs text-red-500 mb-4">Incorrect password. Try again.</p>
           )}
 
-          <button onClick={handleLogin} className="btn-primary w-full text-xs mt-2">
-            Enter Dashboard
+          <button
+            onClick={handleLogin}
+            disabled={loading}
+            className="btn-primary w-full text-xs mt-2 disabled:opacity-50"
+          >
+            {loading ? 'Checking...' : 'Enter Dashboard'}
           </button>
 
           <div className="mt-8">
