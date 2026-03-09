@@ -135,7 +135,7 @@ export default function ScheduleSection() {
           </p>
           <div className="flex justify-center gap-4 flex-wrap">
             <a
-              href="https://wa.me/919999999999"
+              href="https://wa.me/919650340359"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-3 font-body text-xs tracking-wider uppercase transition-colors duration-200"
