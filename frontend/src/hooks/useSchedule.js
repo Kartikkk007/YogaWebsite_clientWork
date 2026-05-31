@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react'
 import { scheduleAPI } from '../utils/api'
-import socket from '../utils/socket'
 
 export function useSchedule() {
   const [schedules, setSchedules] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [connected, setConnected] = useState(false)
+  const [connected] = useState(false)
 
   useEffect(() => {
-    // Initial fetch
     const fetchSchedules = async () => {
       try {
         const res = await scheduleAPI.getAll()
@@ -22,19 +20,6 @@ export function useSchedule() {
     }
 
     fetchSchedules()
-
-    // Socket events
-    socket.on('connect', () => setConnected(true))
-    socket.on('disconnect', () => setConnected(false))
-    socket.on('scheduleUpdated', (updatedSchedules) => {
-      setSchedules(updatedSchedules)
-    })
-
-    return () => {
-      socket.off('connect')
-      socket.off('disconnect')
-      socket.off('scheduleUpdated')
-    }
   }, [])
 
   return { schedules, loading, error, connected }
