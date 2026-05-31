@@ -63,10 +63,7 @@ router.post('/', async (req, res) => {
       { new: true, upsert: true, runValidators: true }
     );
 
-    // Broadcast real-time update to all connected clients
-    const io = req.app.get('io');
-    const allSchedules = await Schedule.find({ isActive: true });
-    io.emit('scheduleUpdated', allSchedules);
+    // ...removed socket.io broadcast for Vercel compatibility...
 
     res.status(201).json({ success: true, data: schedule });
   } catch (err) {
@@ -93,9 +90,7 @@ router.put('/:day/class/:classId', async (req, res) => {
     Object.assign(classItem, updates);
     await schedule.save();
 
-    const io = req.app.get('io');
-    const allSchedules = await Schedule.find({ isActive: true });
-    io.emit('scheduleUpdated', allSchedules);
+    // ...removed socket.io broadcast for Vercel compatibility...
 
     res.json({ success: true, data: schedule });
   } catch (err) {
@@ -118,9 +113,7 @@ router.delete('/:day/class/:classId', async (req, res) => {
     );
     await schedule.save();
 
-    const io = req.app.get('io');
-    const allSchedules = await Schedule.find({ isActive: true });
-    io.emit('scheduleUpdated', allSchedules);
+    // ...removed socket.io broadcast for Vercel compatibility...
 
     res.json({ success: true, data: schedule });
   } catch (err) {
@@ -133,9 +126,7 @@ router.delete('/:day', async (req, res) => {
   try {
     await Schedule.findOneAndDelete({ day: req.params.day });
 
-    const io = req.app.get('io');
-    const allSchedules = await Schedule.find({ isActive: true });
-    io.emit('scheduleUpdated', allSchedules);
+    // ...removed socket.io broadcast for Vercel compatibility...
 
     res.json({ success: true, message: `${req.params.day} schedule deleted` });
   } catch (err) {
@@ -201,8 +192,7 @@ router.post('/seed/default', async (req, res) => {
     await Schedule.deleteMany({});
     const created = await Schedule.insertMany(defaultSchedule);
 
-    const io = req.app.get('io');
-    io.emit('scheduleUpdated', created);
+    // ...removed socket.io broadcast for Vercel compatibility...
 
     res.status(201).json({ success: true, message: 'Default schedule seeded', data: created });
   } catch (err) {
