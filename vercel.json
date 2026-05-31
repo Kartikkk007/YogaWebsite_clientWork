@@ -4,8 +4,7 @@
       "root": "frontend"
     },
     "backend": {
-      "root": "backend",
-      "routesPrefix": "/api"
+      "root": "backend"
     }
   }
 }
